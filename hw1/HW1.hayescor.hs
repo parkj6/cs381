@@ -19,7 +19,6 @@ t2 :: Tree
 t2 = Node 6 (Node 2 (Leaf 1) (Node 4 (Leaf 3) (Leaf 5)))
             (Node 8 (Leaf 7) (Leaf 9))
 
-
 -- | The integer at the left-most node of a binary tree.
 --
 --   >>> leftmost (Leaf 3)
@@ -176,4 +175,35 @@ inorder (Node x y z) = (inorder y) ++ (x : (inorder z))
 --   True
 --   
 
-isBST = undefined
+getNodeVal :: Tree -> Int
+getNodeVal (Leaf x) = x
+getNodeVal (Node x _ _) = x
+
+isBST :: Tree -> Bool
+isBST (Leaf _) = True
+isBST (Node x y z) = isBST y && isBST z && (getNodeVal y < x) && (x < getNodeVal z)
+
+-- | Check whether a number is contained in a binary search tree.
+--   (You may assume that the given tree is a binary search tree.)
+--
+--   >>> inBST 2 (Node 5 (Leaf 2) (Leaf 7))
+--   True
+--
+--   >>> inBST 3 (Node 5 (Leaf 2) (Leaf 7))
+--   False
+--
+--   >>> inBST 4 t2
+--   True
+--
+--   >>> inBST 10 t2
+--   False
+--   
+
+inBST :: Int -> Tree -> Bool
+inBST v (Leaf x)
+   | v == x = True
+   | otherwise = False
+inBST v (Node x y z)
+   | v == x = True
+   | v < x = inBST v y
+   | v > x = inBST v z
