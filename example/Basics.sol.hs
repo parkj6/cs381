@@ -48,18 +48,32 @@ isZero _ = False
 
 -- | Is this integer non-zero?
 isNonZero :: Int -> Bool
-isNonZero 0 = False
-isNonZero _ = True
+isNonZero = not . isZero
+
+-- Option 3:
+-- isNonZero x = not (isZero x)
+
+-- Option 2:
+-- isNonZero 0 = False
+-- isNonZero _ = True
+
+-- Option 1:
 -- isNonZero x = x /= 0
 
 
 -- | Computes the average of two floating point numbers.
 avg :: Float -> Float -> Float
-avg = undefined
+avg x y = (x + y) / 2.0
 
 -- | Uses avg to compute half of a floating point number.
 half :: Float -> Float
-half = undefined
+half = avg 0
+
+-- Option 2:
+-- half = \x -> avg 0 x
+
+-- Option 1:
+-- half x = avg 0 x
 
 
 -- In GHCi:
@@ -83,27 +97,25 @@ half = undefined
 
 -- | An example data type with two cases.
 data Result = OK Int | Error
-  deriving (Eq,Show)    --Things that can be checked for equality (eq) show quality checking
+  deriving (Eq,Show)
 
 -- | Safely divide two integers.
 safeDiv :: Int -> Int -> Result
-safeDiv _ 0 = Error -- <- value of type "Result"
+safeDiv _ 0 = Error
 safeDiv x y = OK (x `div` y)
 
 -- | Get the integer from an OK result, or return 0 on an Error.
 fromResult :: Result -> Int
 -- fromResult (OK i) = i
 -- fromResult Error  = 0
-fromResult r = case r of 
-                Error -> 0
-                OK i  -> i
+fromResult r = case r of
+                 Error -> 0
+                 OK i  -> i
 
 -- | Add two results.
 addResults :: Result -> Result -> Result
 addResults (OK i) (OK j) = OK (i + j)
 addResults _      _      = Error
-
-
 
 
 -- The definition of Bool in the Haskell Prelude looks like this:
@@ -126,8 +138,8 @@ addResults _      _      = Error
 
 -- | An example of a recursive data type.
 data List
-   = Nil            -- empty list 
-   | Cons Int List  -- non-empty list (prepend Int in to existing List)
+   = Nil
+   | Cons Int List
   deriving (Eq,Show)
 
 -- | The empty list.
@@ -136,27 +148,27 @@ empty = Nil
 
 -- | The list: [2,3,4]
 exList :: List
-exList = Cons 2 (Cons 3 (Cons 4 Nil)) --you can use $ instead ()
+exList = Cons 2 (Cons 3 (Cons 4 Nil))
 
 -- | Compute the length of a list.
-listLength :: List -> Int   
+listLength :: List -> Int
 listLength Nil        = 0
-listLength (Cons h t) = 1 + listLength t --heads (Int) and tails (List)
---listLength (Cons _ t) = 1 + listLength t -- still works
+listLength (Cons _ t) = 1 + listLength t
 
 -- | Compute the sum of the integers in a list.
 listSum :: List -> Int
-listSum = undefined
+listSum Nil        = 0
+listSum (Cons h t) = h + listSum t
 
 
 -- Example evaluation:
---  Sub left with right by default (R2L works too.)
 --
 -- listSum (Cons 3 (Cons 4 Nil))
 -- => 3 + listSum (Cons 4 Nil)
--- => 3 + (4 +listSum Nil)
+-- => 3 + (4 + listSum Nil)
 -- => 3 + (4 + 0)
 -- =>* 7
+
 
 -- Use a *type parameter* to define lists that contain elements of any type:
 --
@@ -182,7 +194,6 @@ listSum = undefined
 --    = []         -- Nil
 --    | a : [a]    -- Cons
 
-
 -- The definition of String in the Haskell Prelude looks like this:
 --
 --   type String = [Char]
@@ -201,21 +212,20 @@ sum (h:t) = h + sum t
 -- | Compute the product of the elements in a list.
 product :: [Int] -> Int
 product []    = 1
-product (h:t) = h * product t -- accumulator function
+product (h:t) = h * product t
 
 allOdd :: [Int] -> Bool
 allOdd []    = True
 allOdd (h:t) = odd h && allOdd t
 
-
 -- | Double all the elements in an integer list.
 doubleAll :: [Int] -> [Int]
 doubleAll []    = []
-doubleAll (h:t) = (2 * h) : doubleAll t  -- prepending 2x of h into t using doubleAll
+doubleAll (h:t) = (2 * h) : doubleAll t
 
 -- | Flip all of the boolean values in a boolean list.
 notAll :: [Bool] -> [Bool]
-notAll [] = []
+notAll []    = []
 notAll (h:t) = not h : notAll t
 
 -- | Apply the even function to all elements in the list.
@@ -223,12 +233,7 @@ evenAll :: [Int] -> [Bool]
 evenAll []    = []
 evenAll (h:t) = even h : evenAll t
 
---  *Basics> :t curry
---  curry :: ((a, b) -> c) -> a -> b -> c
---  *Basics> :t uncurry
---  uncurry :: (a -> b -> c) -> (a, b) -> c
--- $ is function application
--- > zipWith ($)
+
 ----------------------------
 -- Higher-Order Functions --
 ----------------------------
@@ -237,39 +242,26 @@ evenAll (h:t) = even h : evenAll t
 
 
 -- | Map a function over the elements in a list.
--- input paramemter that's different from doubleAll and notAll
--- type of input has to match the type of output
-map :: (a -> b) -> [a] -> [b]  --function -> list -> output list 
-map f [] = []
+map :: (a -> b) -> [a] -> [b]
+map f []    = []
 map f (h:t) = f h : map f t
---h = element of a
---t = list of a
-
 
 -- | Reimplement doubleAll using map.
 doubleAll' :: [Int] -> [Int]
 doubleAll' = map (2*)
-doubleAll'' xs = map (2*) xs -- this is same as above
-
 
 -- | Reimplement notAll using map.
 notAll' :: [Bool] -> [Bool]
 notAll' = map not
 
--- | Reimplemnt evenAll using map.
+-- | Reimplement evenAll using map.
 evenAll' :: [Int] -> [Bool]
-evenAll' = map even 
-
+evenAll' = map even
 
 -- | Fold an accumulator function over the elements in a list.
--- base case = b
--- input [a]
--- output b
--- binary structure ( -> -> )
 foldr :: (a -> b -> b) -> b -> [a] -> b
 foldr f b []    = b
 foldr f b (h:t) = f h (foldr f b t)
--- h is type a
 
 -- | Reimplement sum using foldr.
 sum' :: [Int] -> Int
@@ -282,17 +274,11 @@ product' = foldr (*) 1
 -- | Reimplement length using foldr.
 length' :: [a] -> Int
 length' = foldr (\_ l -> 1 + l) 0
--- h = head
--- l = length
--- r = result
--- \ = I'm defining function right now (py: lambda)
 
--- | Reimplement allOdd using foldr
+-- | Reimplement allOdd using foldr.
 allOdd' :: [Int] -> Bool
-allOdd' = foldr (\h r -> odd h && r) True --by default true
-
+allOdd' = foldr (\h r -> odd h && r) True
 
 -- | Use foldr to count the True values in a list of Bools.
 countTrues :: [Bool] -> Int
--- countTrues = foldr (\h r -> if h == True then ... else ... ) 0  -- pattern here
-countTrues = foldr (\h r -> if h then 1 + r else r) 0  -- empty list = no trues 
+countTrues = foldr (\h r -> if h then 1 + r else r) 0
