@@ -1,5 +1,3 @@
---Team: Cory Hayes (hayescor), Jong Park (parkj6), Jacob Lyons (lyonsja)
-
 module HW1 where
 
 
@@ -175,15 +173,18 @@ inorder (Node x y z) = (inorder y) ++ (x : (inorder z))
 --
 --   >>> isBST t2
 --   True
---   
+--
+--   >>> isBST (Node 10 (Node 5 (Leaf 2) (Leaf 15)) (Node 20 (Leaf 12) (Leaf 30)))
+--   False
+--  
 
-getNodeVal :: Tree -> Int
-getNodeVal (Leaf x) = x
-getNodeVal (Node x _ _) = x
+isAsc :: [Int] -> Bool
+isAsc [] = True
+isAsc [x] = True
+isAsc (x:y:zs) = x <= y && isAsc (y:zs)
 
 isBST :: Tree -> Bool
-isBST (Leaf _) = True
-isBST (Node x y z) = isBST y && isBST z && (getNodeVal y < x) && (x < getNodeVal z)
+isBST x = isAsc(inorder(x))
 
 -- | Check whether a number is contained in a binary search tree.
 --   (You may assume that the given tree is a binary search tree.)
