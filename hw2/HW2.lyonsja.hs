@@ -66,11 +66,11 @@ mapTree = undefined
 --   >>> valueAt [L,L,L] ex
 --   Nothing
 --
-valueAt:: Tree a -> Path -> Maybe a
-valueAt  End _ = Nothing
-valueAt (Node i l r) [] = Just(i)
-valueAt (Node i l r) (h:t) | h == R = valueAt r t
-                             | h == L = valueAt l t     
+valueAt:: Path -> Tree a -> Maybe a
+valueAt            _ End = Nothing
+valueAt [] (Node i l r)  = Just(i)
+valueAt (h:t) (Node i l r)  | h == R = valueAt t r
+                             | h == L = valueAt t l    
 
 -- | Find a path to a node that contains the given value.
 --
