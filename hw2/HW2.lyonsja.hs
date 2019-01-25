@@ -1,3 +1,5 @@
+--Team: Cory Hayes (hayescor), Jong Park (parkj6), Jacob Lyons (lyonsja)
+
 module HW2 where
 
 -- | Binary trees with nodes labeled by values of an arbitrary type.
