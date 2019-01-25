@@ -29,7 +29,7 @@ ex = Node 4 (Node 3 (leaf 2) End)
 
 -- | Map a function over a tree. Applies the given function to every label
 --   in the tree, preserving the tree's structure.
---   
+--
 --   >>> mapTree odd End
 --   End
 --
@@ -45,7 +45,9 @@ ex = Node 4 (Node 3 (leaf 2) End)
 --   >>> ex == (mapTree (subtract 27) . mapTree (+27)) ex
 --   True
 --
-mapTree = undefined
+mapTree :: (a -> b) -> Tree a -> Tree b
+mapTree _ End = End
+mapTree f (Node i l r) = Node (f i) (mapTree f l) (mapTree f r)
 
 
 -- | Get the value at the node specified by a path. Returns 'Nothing' if
@@ -70,7 +72,7 @@ valueAt:: Path -> Tree a -> Maybe a
 valueAt            _ End = Nothing
 valueAt [] (Node i l r)  = Just(i)
 valueAt (h:t) (Node i l r)  | h == R = valueAt t r
-                             | h == L = valueAt t l    
+                            | h == L = valueAt t l
 
 -- | Find a path to a node that contains the given value.
 --
@@ -89,5 +91,11 @@ valueAt (h:t) (Node i l r)  | h == R = valueAt t r
 --   >>> pathTo 10 ex
 --   Nothing
 --
---pathTo :: Eq a => a -> Tree a -> Maybe Path
---pathTo = undefined
+pathTo :: Eq a => a -> Tree a -> Maybe Path
+pathTo End _ = Nothing
+pathTo [] t = Just(t)
+
+pathHelper :: Step -> a -> Tree a -> Maybe Path
+pathHelper
+pathHelper (h:t) (Node i l r) | h == R = pathTo [h:R]
+                              | h == L = pathTo [h:L]
