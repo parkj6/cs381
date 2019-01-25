@@ -45,7 +45,10 @@ ex = Node 4 (Node 3 (leaf 2) End)
 --   >>> ex == (mapTree (subtract 27) . mapTree (+27)) ex
 --   True
 --
-mapTree = undefined
+mapTree :: (a -> b) -> Tree a -> Tree b
+mapTree _ End = End
+mapTree f (Node i l r) = Node (f i) (mapTree f l) (mapTree f r)
+
 
 
 -- | Get the value at the node specified by a path. Returns 'Nothing' if
