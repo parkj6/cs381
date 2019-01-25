@@ -26,7 +26,6 @@ ex = Node 4 (Node 3 (leaf 2) End)
             (Node 7 (Node 5 End (leaf 6))
                     (leaf 8))
 
-
 -- | Map a function over a tree. Applies the given function to every label
 --   in the tree, preserving the tree's structure.
 --   
@@ -92,5 +91,17 @@ valueAt (h:t) (Node i l r)  | h == R = valueAt t r
 --   >>> pathTo 10 ex
 --   Nothing
 --
---pathTo :: Eq a => a -> Tree a -> Maybe Path
---pathTo = undefined
+
+inTree :: Eq a => a -> Tree a -> Bool
+inTree _ End = False
+inTree i (Node j l r) | i == j = True
+                      | otherwise = inTree i l || inTree i r
+
+buildPath :: Eq a => a -> Tree a -> Path
+buildPath i (Node j l r) | inTree i l = L : (buildPath i l)
+                         | inTree i r = R : (buildPath i r)
+                         | i == j = []
+
+pathTo :: Eq a => a -> Tree a -> Maybe Path
+pathTo i t            | inTree i t = Just (buildPath i t)
+                      | otherwise = Nothing
