@@ -90,4 +90,15 @@ valueAt (h:t) (Node i l r)  | h == R = valueAt t r
 --   Nothing
 --
 --pathTo :: Eq a => a -> Tree a -> Maybe Path
+--pathTo _ End = Nothing
+--pathTo j (Node i l r) = pathBuilder [L] (pathto i l)
+--pathTo j (Node i l r) = pathBuilder [R] (pathto i r)  
+
+
+
+
+pathBuilder :: Step -> Maybe Path -> Maybe Path
+pathBuilder R xs = xs ++  R
+pathBuilder L xs = xs ++  L
+pathBuilder _ xs = xs
 --pathTo = undefined
