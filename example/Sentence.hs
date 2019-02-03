@@ -22,5 +22,5 @@ ex1 = And (NVN Cats Chase Dogs) (NVN Dogs Cuddle Ducks)
 isNice :: Sentence -> Bool
 -- isNice (NVN n1 v n2) = v == Cuddle
 isNice (NVN _ Cuddle _) = True
-isNice (NVN _ Chase  _) = False
+-- isNice (NVN _ Chase  _) = False
 isNice (And s1 s2)      = isNice s1 && isNice s2

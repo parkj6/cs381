@@ -2,7 +2,7 @@
 
 lista = [1,2,3,4,5,6,7,8,9,10]
 
--- sum 
+-- sum
 lst = [2,3,5,7,11]
 
 total = sum (map (3*) lst)
@@ -16,15 +16,14 @@ sumtorial n = n + sumtorial (n - 1)
 
 fac = print (sumtorial 10)
 
-
 -- Sum the pair
 sumPair :: (Int, Int) -> Int
 sumPair (x,y) = x + y
 
 -- Nested pattern to sum every 2
 sumEveryTwo :: [Integer] -> [Integer]
-sumEveryTwo []     = []         -- Do nothing (empty list)
-sumEveryTwo (x:[]) = []         -- Do nothing (1 element on list)
+sumEveryTwo []         = []         -- Do nothing (empty list)
+sumEveryTwo (x:[])     = []         -- Do nothing (1 element on list)
 sumEveryTwo (x:(y:zs)) = (x + y) : sumEveryTwo zs
 
 
@@ -33,7 +32,7 @@ hailstone :: Integer -> Integer
 hailstone n
   | n `mod` 2 == 0 = n `div` 2
   | otherwise      = 3 * n + 1
-  
+
 -- adding more stuff to hailstone list
 hailstoneSeq :: Integer -> [Integer]
 hailstoneSeq 1 = [1]
@@ -54,17 +53,17 @@ hailstoneLen n = intListLength (hailstoneSeq n) - 1
 
 -- Creating our own enumeration types
 data Thing = Shoe
-                       | Ship
-                       | SealingWax
-                       | Cabbage
-                       | King
-      deriving Show
+           | Ship
+           | SealingWax
+           | Cabbage
+           | King
+   deriving Show
 
 isSmall :: Thing -> Bool
-isSmall Shoe                = True
+isSmall Shoe        = True
 isSmall SealingWax  = True
-isSmall Cabbage         = True
-isSmall _                      = False
+isSmall Cabbage     = True
+isSmall _           = False
 
 isBig :: Thing -> Bool
 isBig a = not (isSmall a)
@@ -72,8 +71,8 @@ isBig a = not (isSmall a)
 
 -- Enmuration with more stuff
 data FailableDouble = Failure
-                                          | OK Double
-                         deriving Show
+                    | OK Double
+            deriving Show
 
 a = Failure
 b = OK 3.14
@@ -86,14 +85,14 @@ safeDiv x y = OK (x / y)
 
 -- Multiple algebraic data types
 data AlgDataType = Constr1 Int String
-                                    | Constr2 Int
-                                    | Constr3 Int String Double
-                                    | Constr4
-                 
+                 | Constr2 Int
+                 | Constr3 Int String Double
+                 | Constr4
+
 -- more than 1 argument
 data Person  = Person String Int Thing
         deriving Show
-        
+
 -- Example humans
 brent :: Person
 brent = Person "Brent" 30 SealingWax
@@ -126,14 +125,14 @@ checkFav (Person n _ _) = "I Don't really give a crap, " ++ n
 --             |(Constructor pat1 pat2 ... patn) -- Constructor name followed by a sequence of patterns is a pattern.
 
 
--- Case pattern matching 
+-- Case pattern matching
 n = case "Hello" of
   []      -> 3
   ('H':s) -> length s
---     _               -> 7             -- this is else case, but errors since it matches all.
+  _               -> 7             -- this is else case, but errors since it matches all.
 -- n = 4 because n = length ('ello')
 
--- Recursive Ddata Types
+-- Recursive Data Types
 data IntList = Empty | Cons Int IntList
 
 intListProd :: IntList -> Int
@@ -141,18 +140,9 @@ intListProd Empty = 1
 intListProd (Cons x xs) = x * intListProd xs
 
 -- Basic Binary Tree
-data Tree = Leaf Char 
-                    | Node Tree Int Tree
+data Tree = Leaf Char
+          | Node Tree Int Tree
    deriving Show
-        
+
 tree :: Tree
 tree = Node (Leaf 'x') 1 (Node (Leaf 'y') 2 (Leaf 'z'))
-
-
-
-
-
-
-
-
-

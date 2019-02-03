@@ -17,7 +17,7 @@ data Num = Int
 data Var = variable
   deriving (Eq,Show)
 -- macro	::=	(any macro name)
-data Macro
+data Macro = Prog
   deriving (Eq,Show)
 
 -- cmd	::=	pen mode	change pen mode
@@ -25,10 +25,10 @@ data Macro
 -- |	define macro ( var* ) { prog }  	define a macro
 -- |	call macro ( expr* )	invoke a macro
 data Cmd
-    = Pen Mode
-    | Move Expr Expr
-    | Macro Var Prog
-    | Macro Expr
+    = Pen Mode          -- change pen mode
+    | Move Expr Expr    -- Move pen
+    | Macro Var Prog    -- Define a macro
+    | Macro Expr        -- Invoke a macro
 
 -- mode	::=	down   |   up	pen status
 data Mode = Up | Down
