@@ -11,10 +11,10 @@ module HW3 where
 type Prog = [Cmd]
 
 -- num	::=	(any natural number)
-data Num = Int
-  deriving (Eq,Show)
+-- data Num = Int
+--   deriving (Eq,Show)
 -- var	::=	(any variable name)
-data Var = variable
+data Var = String
   deriving (Eq,Show)
 -- macro	::=	(any macro name)
 data Macro = Prog
@@ -27,7 +27,7 @@ data Macro = Prog
 data Cmd
     = Pen Mode          -- change pen mode
     | Move Expr Expr    -- Move pen
-    | Macro Var Prog    -- Define a macro
+    | DefMac Var Prog   -- Define a macro
     | Macro Expr        -- Invoke a macro
 
 -- mode	::=	down   |   up	pen status
@@ -40,3 +40,8 @@ data Mode = Up | Down
 data Expr = Int
           | And Expr Expr
   deriving (Eq, Show)
+
+
+
+
+
