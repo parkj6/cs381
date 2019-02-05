@@ -68,10 +68,10 @@ mapTree f (Node n l r) = Node (f n) (mapTree f l) (mapTree f r)
 --   Nothing
 --
 valueAt :: Path -> Tree a -> Maybe a
-valueAt [] (Node n l r) = Just n
-valueAt (h:t) End       = Nothing
-valueAt (h:t) (Node n l r) | h == L = valueAt t ex
-                           | h == R = valueAt t ex
+valueAt _     End          = Nothing
+valueAt []    (Node n l r) = Just n
+valueAt (h:t) (Node n l r) | h == L = valueAt t l
+                           | h == R = valueAt t r
 
 -- | Find a path to a node that contains the given value.
 --
