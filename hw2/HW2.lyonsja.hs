@@ -92,6 +92,7 @@ valueAt (h:t) (Node i l r)  | h == R = valueAt t r
 --   >>> pathTo 10 ex
 --   Nothing
 --
+
 inTree :: Eq a => a -> Tree a -> Bool
 inTree _ End = False
 inTree i (Node j l r) | i == j = True
