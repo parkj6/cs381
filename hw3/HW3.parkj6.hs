@@ -19,7 +19,6 @@ type Var = String
 -- macro	::=	(any macro name)
 type Macro = String
 
-
 -- cmd	::=	pen mode	change pen mode
 -- |	move ( expr , expr )	move pen to a new position
 -- |	define macro ( var* ) { prog }  	define a macro
@@ -60,16 +59,28 @@ nix = Define "nix"["x", "y", "h", "w"][Call "line" [VAR "x", VAR "y", EXPR (VAR 
                                        Call "line" [EXPR(VAR "x")(VAR "w"), VAR "y", VAR "x", EXPR (VAR "y") (VAR "h")]]
 
 
+-- steps 1
+-- [Pen Up, Move (NUM 0) (NUM 0), Pen Down, Move (NUM 0) (NUM 1), Move (NUM 1) (NUM 1)]
+-- 
+--
+-- steps 3
+-- [Pen Up, Move (NUM 0) (NUM 0), Pen Down, Move (NUM 0) (NUM 1), Move (NUM 1) (NUM 1), Move (NUM 1) (NUM 2), Move (NUM 2) (NUM 2),
+--  Move (NUM 2) (NUM 3), MOVE (NUM 3) (NUM 3)]
+--
+--
+
+steps :: Int -> Prog
+steps 0 = [Pen Up, Move (NUM 0) (NUM 0), Pen Down];
+steps i = steps (i-1) ++ [Move (NUM (i-1)) (NUM i), Move (NUM i) (NUM i)]
 
 
---steps :: Int -> Prog
 
 
-
-
-
---macros :: Prog-> [Macro]
-
+macros :: Prog-> [Macro]
+macros [] = []
+macros (h:t) = case h of Define m _ _ -> [m] ++ macros t
+                         _ -> macros t                    --This indentation needs to stay
+             
 
 
 
