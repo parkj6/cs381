@@ -25,3 +25,7 @@ cabal.project.local~
 # personal 
 .dropbox
 notes*
+
+# Back up files
+*~
+*.swp

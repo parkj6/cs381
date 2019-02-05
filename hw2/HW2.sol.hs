@@ -1,5 +1,3 @@
---Team: Cory Hayes (hayescor), Jong Park (parkj6), Jacob Lyons (lyonsja)
-
 module HW2 where
 
 -- | Binary trees with nodes labeled by values of an arbitrary type.
@@ -28,9 +26,10 @@ ex = Node 4 (Node 3 (leaf 2) End)
             (Node 7 (Node 5 End (leaf 6))
                     (leaf 8))
 
+
 -- | Map a function over a tree. Applies the given function to every label
 --   in the tree, preserving the tree's structure.
---
+--   
 --   >>> mapTree odd End
 --   End
 --
@@ -47,8 +46,8 @@ ex = Node 4 (Node 3 (leaf 2) End)
 --   True
 --
 mapTree :: (a -> b) -> Tree a -> Tree b
-mapTree _ End = End
-mapTree f (Node i l r) = Node (f i) (mapTree f l) (mapTree f r)
+mapTree f End          = End
+mapTree f (Node x l r) = Node (f x) (mapTree f l) (mapTree f r)
 
 
 -- | Get the value at the node specified by a path. Returns 'Nothing' if
@@ -69,11 +68,12 @@ mapTree f (Node i l r) = Node (f i) (mapTree f l) (mapTree f r)
 --   >>> valueAt [L,L,L] ex
 --   Nothing
 --
-valueAt:: Path -> Tree a -> Maybe a
-valueAt            _ End = Nothing
-valueAt [] (Node i l r)  = Just(i)
-valueAt (h:t) (Node i l r)  | h == R = valueAt t r
-                            | h == L = valueAt t l
+valueAt :: Path -> Tree a -> Maybe a
+valueAt _     End          = Nothing
+valueAt []    (Node x _ _) = Just x
+valueAt (L:p) (Node _ l _) = valueAt p l
+valueAt (R:p) (Node _ _ r) = valueAt p r
+
 
 -- | Find a path to a node that contains the given value.
 --
@@ -92,16 +92,44 @@ valueAt (h:t) (Node i l r)  | h == R = valueAt t r
 --   >>> pathTo 10 ex
 --   Nothing
 --
-inTree :: Eq a => a -> Tree a -> Bool
-inTree _ End = False
-inTree i (Node j l r) | i == j = True
-                      | otherwise = inTree i l || inTree i r
-
-buildPath :: Eq a => a -> Tree a -> Path
-buildPath i (Node j l r) | inTree i l = L : (buildPath i l)
-                         | inTree i r = R : (buildPath i r)
-                         | i == j = []
-
 pathTo :: Eq a => a -> Tree a -> Maybe Path
-pathTo i t            | inTree i t = Just (buildPath i t)
-                      | otherwise = Nothing
+pathTo x End = Nothing
+pathTo x (Node y l r)
+  | x == y    = Just []
+  | otherwise = case pathTo x l of
+                  Just p  -> Just (L:p)
+                  Nothing -> case pathTo x r of
+                               Just p  -> Just (R:p)
+                               Nothing -> Nothing
+
+
+-- Here is a slightly nicer implementation that groups the two
+-- recursive calls using a pair. Note that because of lazy
+-- evaluation, there is no performance penalty for doing this!
+-- If the value is found in the left branch, the subexpression
+-- 'pathTo x r' will never be evaluated.
+--
+-- pathTo x End  = Nothing
+-- pathTo x (Node y l r)
+--   | x == y    = Just []
+--   | otherwise = case (pathTo x l, pathTo x r) of
+--                   (Just p, _) -> Just (L:p)
+--                   (_, Just p) -> Just (R:p)
+--                   _           -> Nothing
+
+
+-- And here is an even nicer implementation using a feature
+-- called "pattern guards". The basic idea is that a guard
+-- of the form '<pattern> <- <expr>' will succeed if the
+-- result of the expression matches the pattern and fail
+-- otherwise (and then the next guard will be tried). This
+-- is not a feature you need to know since you can always
+-- just use case-expressions instead, but it often leads
+-- to cleaner looking code.
+--
+-- pathTo x End = Nothing
+-- pathTo x (Node y l r)
+--   | x == y               = Just []
+--   | Just p <- pathTo x l = Just (L:p)
+--   | Just p <- pathTo x r = Just (R:p)
+-- pathTo _ _               = Nothing

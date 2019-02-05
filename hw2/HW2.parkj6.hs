@@ -1,5 +1,3 @@
---Team: Cory Hayes (hayescor), Jong Park (parkj6), Jacob Lyons (lyonsja)
-
 module HW2 where
 
 -- | Binary trees with nodes labeled by values of an arbitrary type.
@@ -28,6 +26,7 @@ ex = Node 4 (Node 3 (leaf 2) End)
             (Node 7 (Node 5 End (leaf 6))
                     (leaf 8))
 
+
 -- | Map a function over a tree. Applies the given function to every label
 --   in the tree, preserving the tree's structure.
 --
@@ -47,9 +46,8 @@ ex = Node 4 (Node 3 (leaf 2) End)
 --   True
 --
 mapTree :: (a -> b) -> Tree a -> Tree b
-mapTree _ End = End
-mapTree f (Node i l r) = Node (f i) (mapTree f l) (mapTree f r)
-
+mapTree _ End          = End
+mapTree f (Node n l r) = Node (f n) (mapTree f l) (mapTree f r)
 
 -- | Get the value at the node specified by a path. Returns 'Nothing' if
 --   the given path is invalid.
@@ -69,11 +67,11 @@ mapTree f (Node i l r) = Node (f i) (mapTree f l) (mapTree f r)
 --   >>> valueAt [L,L,L] ex
 --   Nothing
 --
-valueAt:: Path -> Tree a -> Maybe a
-valueAt            _ End = Nothing
-valueAt [] (Node i l r)  = Just(i)
-valueAt (h:t) (Node i l r)  | h == R = valueAt t r
-                            | h == L = valueAt t l
+valueAt :: Path -> Tree a -> Maybe a
+valueAt _     End          = Nothing
+valueAt []    (Node n l r) = Just n
+valueAt (h:t) (Node n l r) | h == L = valueAt t l
+                           | h == R = valueAt t r
 
 -- | Find a path to a node that contains the given value.
 --
@@ -92,16 +90,5 @@ valueAt (h:t) (Node i l r)  | h == R = valueAt t r
 --   >>> pathTo 10 ex
 --   Nothing
 --
-inTree :: Eq a => a -> Tree a -> Bool
-inTree _ End = False
-inTree i (Node j l r) | i == j = True
-                      | otherwise = inTree i l || inTree i r
-
-buildPath :: Eq a => a -> Tree a -> Path
-buildPath i (Node j l r) | inTree i l = L : (buildPath i l)
-                         | inTree i r = R : (buildPath i r)
-                         | i == j = []
-
 pathTo :: Eq a => a -> Tree a -> Maybe Path
-pathTo i t            | inTree i t = Just (buildPath i t)
-                      | otherwise = Nothing
+pathTo = undefined
