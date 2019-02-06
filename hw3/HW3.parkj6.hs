@@ -104,6 +104,10 @@ macros (h:t) = case h of Define m _ _ -> [m] ++ macros t
 -- | concrete syntax (a string of characters). 
 -- | Your pretty-printed program should look similar to the example programs given above; 
 -- | however, for simplicity you will probably want to print just one command per line.
+-- | 
+-- >>> pretty [line,nix]
+-- "define line(x1,y1,x2,y2) {\n\tpen up;\n\tmove (x1,y1);\n\tpen down;\n\tmove (x2,y2);\n}\ndefine nix(x,y,h,w) {\n\tcall line (x,y,x+w,y+h)\n\tcall line (x+w,y,x,y+h)\n}\n"
+
 -- >>> putStrLn (pretty [line,nix])
 -- define line(x1,y1,x2,y2) {
 --         pen up;
@@ -124,14 +128,16 @@ pretty (x:xs) = extractCmd x ++ "\n" ++ pretty xs
 -- "define line(x1,y1,x2,y2) {\n\tpen up;\n\tmove (x1,y1);\n\tpen down;\n\tmove (x2,y2);\n}"
 
 extractCmd :: Cmd -> String
-extractCmd (Pen s) = "\tpen " ++ if s == Up then "up;" else "down;" 
-extractCmd (Move e1 e2) = "\tmove (" ++ expandExprList [e1] ++ "," ++ expandExprList [e2] ++ ");" 
+extractCmd (Pen s)           = "\tpen " ++ if s == Up then "up;" else "down;" 
+extractCmd (Move e1 e2)      = "\tmove (" ++ expandExprList [e1] ++ "," ++ expandExprList [e2] ++ ");" 
 extractCmd (Define m vars p) = "define " ++ m ++ "(" ++ expandVarList vars ++ ") {\n" ++ pretty p ++ "}"
-extractCmd (Call m exprs) = "\tcall " ++ m ++ " (" ++ expandExprList exprs ++ ")" 
+extractCmd (Call m exprs)    = "\tcall " ++ m ++ " (" ++ expandExprList exprs ++ ")" 
+
 
 -- | Takes in Expression from sequence of commands and extracts the string from it.
 -- >>> expandExprList [VAR "x", VAR "y", EXPR (VAR "x") (VAR "w"), EXPR (VAR "y") (VAR "h")]
 -- "x,y,x+w,y+h"
+
 expandExprList :: [Expr] -> String
 expandExprList (h:[]) = case h of (NUM n) -> show n 
                                   (VAR v) -> v 
@@ -143,6 +149,7 @@ expandExprList (h:t)  = case h of (NUM n) -> show n ++ "," ++ expandExprList t
 -- | Takes list of variable and spits out strings
 -- >>> expandVarList ["x1","y1","x2","y2"]
 -- "x1,y1,x2,y2"
+
 expandVarList :: [Var] -> String
 expandVarList (h:[]) = h
 expandVarList (h:t)  = h ++ "," ++ expandVarList t
