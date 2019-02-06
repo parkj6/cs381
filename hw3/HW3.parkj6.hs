@@ -108,13 +108,11 @@ extractCmd :: Cmd -> String
 extractCmd (Pen s) = "\tpen " ++ if s == Up then "up;" else "down;"                   --Complete
 extractCmd (Move e1 e2) = "\tmove (" ++ expandExprList [e1] ++ "," ++ expandExprList [e2] ++ ");" --Complete
 extractCmd (Define m vars p) = "define " ++ m ++ "(" ++ expandVarList vars ++ ") {\n" ++ pretty p ++ "}"
-extractCmd (Call m exprs) = "\tcall " ++ m ++ " (" ++ expandExprList exprs ++ ")"     --Complete
-
+extractCmd (Call m exprs) = "\tcall " ++ m ++ " (" ++ expandExprList exprs ++ ");"     --Complete
 
 pretty :: Prog -> String
 pretty (x:[]) = extractCmd x ++ "\n"
 pretty (x:xs) = extractCmd x ++ "\n" ++ pretty xs
-
 
 -- Takes [Expr] in the form [VAR "x", VAR "y", EXPR (VAR "x") (VAR "w"), EXPR (VAR "y") (VAR "h")]
 -- Returns String in the form "x,y,x+w,y+h"
@@ -132,4 +130,9 @@ expandExprList (h:t) = case h of (NUM n) -> show n ++ "," ++ expandExprList t
 expandVarList :: [Var] -> String
 expandVarList (h:[]) = h
 expandVarList (h:t)  = h ++ "," ++ expandVarList t
-                                 
+
+
+-- optE :: Expr -> Expr
+-- expandExprList (h:[]) = case h of (NUM n) -> show n 
+--                                   (VAR v) -> v 
+--                                   (EXPR (VAR e1) (VAR e2)) -> e1 ++ "+" ++ e2
