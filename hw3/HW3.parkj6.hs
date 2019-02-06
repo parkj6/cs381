@@ -105,17 +105,19 @@ macros (h:t) = case h of Define m _ _ -> [m] ++ macros t
 
 
 extractCmd :: Cmd -> String
-extractCmd (Pen s) = "pen " ++ if s == Up then "up;" else "down;"                   --Complete
-extractCmd (Move (NUM e1) (NUM e2)) = "move (" ++ show e1 ++ "," ++ show e2 ++ ");" --Complete
-extractCmd (Define m vars p) = "define " ++ m ++ "(" ++ expandVarList vars ++ ") {" ++ pretty p
-extractCmd (Call m exprs) = "call " ++ m ++ " (" ++ expandExprList exprs ++ ")"     --Complete
+extractCmd (Pen s) = "\tpen " ++ if s == Up then "up;" else "down;"                   --Complete
+extractCmd (Move e1 e2) = "\tmove (" ++ expandExprList [e1] ++ "," ++ expandExprList [e2] ++ ");" --Complete
+extractCmd (Define m vars p) = "define " ++ m ++ "(" ++ expandVarList vars ++ ") {\n" ++ pretty p ++ "}"
+extractCmd (Call m exprs) = "\tcall " ++ m ++ " (" ++ expandExprList exprs ++ ")"     --Complete
 
 
 pretty :: Prog -> String
-pretty (x:[]) = extractCmd x ++ "\n}"
+pretty (x:[]) = extractCmd x ++ "\n"
 pretty (x:xs) = extractCmd x ++ "\n" ++ pretty xs
 
 
+-- Takes [Expr] in the form [VAR "x", VAR "y", EXPR (VAR "x") (VAR "w"), EXPR (VAR "y") (VAR "h")]
+-- Returns String in the form "x,y,x+w,y+h"
 expandExprList :: [Expr] -> String
 expandExprList (h:[]) = case h of (NUM n) -> show n 
                                   (VAR v) -> v 
@@ -125,6 +127,8 @@ expandExprList (h:t) = case h of (NUM n) -> show n ++ "," ++ expandExprList t
                                  (EXPR (VAR e1) (VAR e2)) -> e1 ++ "+" ++ e2 ++ "," ++ expandExprList t
 
 --Complete. Works
+-- Takes something in the form ["x1","y1","x2","y2"]
+-- Returns in the form "x1,y1,x2,y2"
 expandVarList :: [Var] -> String
 expandVarList (h:[]) = h
 expandVarList (h:t)  = h ++ "," ++ expandVarList t
