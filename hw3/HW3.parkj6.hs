@@ -153,3 +153,15 @@ expandExprList (h:t)  = case h of (NUM n) -> show n ++ "," ++ expandExprList t
 expandVarList :: [Var] -> String
 expandVarList (h:[]) = h
 expandVarList (h:t)  = h ++ "," ++ expandVarList t
+
+-- |
+-- >>> optE (2+3)+x
+-- 5+x
+
+optE :: Expr -> Expr
+optE (EXPR e1 e2) = helper e1 ++ helper e2
+-- optE (VAR v) = v
+optE (NUM n) = n
+
+helper :: Maybe -> Expr
+helper ()
