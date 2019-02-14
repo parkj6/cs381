@@ -79,4 +79,20 @@ prog (x:xs) s = case (cmd x s) of
 -- | This should be a MiniMiniLogo program that draws an amazing picture.
 --   Add as many helper functions as you want.
 amazing :: Prog
-amazing = undefined
+amazing = squp 20 ++ mandala 10 10
+
+squp :: Int -> Prog
+squp 0 = []
+squp a = sq a a ++ squp (a-1)
+
+mandala :: Int -> Int -> Prog
+mandala _ 0 = []
+mandala s r = sq s s ++ mandala (div (s*10) 11) (r-1)
+-- s = # size of sq
+-- r = # of recursion
+
+sq :: Int -> Int -> Prog
+sq x y = [Move 0 0, Pen Down, Move 0 y, Move x y, Move x 0, Move 0 0, Pen Up, Move x y, Pen Down, Move x (x+y), Move (x+y) (x+y), Move (x+y) y, Move x y]
+
+sqrev :: Int -> Int -> Prog
+sqrev x y = [Move 820 420, Pen Down, Move (820-x) 420, Move (820-x) (420- y), Move 820 (420-y), Move 820 420, Pen Up]
