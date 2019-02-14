@@ -1,4 +1,4 @@
-module HW3 where
+module HW4 where
 
 import MiniMiniLogo
 import Render
@@ -58,7 +58,7 @@ cmd (Move x y) (m,p) | m == Down = ( (m,(x,y)), Just (p,(x,y)) )
 -- | Semantic function for Prog.
 --
 --   >>> prog (nix 10 10 5 7) start
---    ((Down,(15,10)),[((10,10),(15,17)),((10,17),(15,10))])
+--   ((Down,(15,10)),[((10,10),(15,17)),((10,17),(15,10))])
 --
 --   >>> prog (steps 2 0 0) start
 --   ((Down,(2,2)),[((0,0),(0,1)),((0,1),(1,1)),((1,1),(1,2)),((1,2),(2,2))])
@@ -66,7 +66,7 @@ prog :: Prog -> State -> (State, [Line])
 prog [] s     = (s, [])
 prog (x:xs) s = case (cmd x s) of
                 (ns, Nothing)   -> prog xs ns
-                (ns, Just line) ->( (ns), [line] ++  snd(prog xs ns)  )
+                (ns, Just line) ->( fst(prog xs ns), [line] ++ snd(prog xs ns) )
                     
 -- ls = last pen state 
 -- ns = next State
