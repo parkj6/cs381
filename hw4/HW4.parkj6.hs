@@ -1,3 +1,5 @@
+--Team: Cory Hayes (hayescor), Jong Park (parkj6), Jacob Lyons (lyonsja)
+
 module HW4 where
 
 import MiniMiniLogo
