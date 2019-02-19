@@ -12,6 +12,7 @@ import Prelude hiding (Num)
 -- | You should use built-in types for num, var, and macro. 
 -- | (If you want to define a type Num, you will have to hide that name from the Prelude).
 
+
 -- prog	::=	ε   |   cmd ; prog	sequence of commands
 type Prog = [Cmd]
 
@@ -44,6 +45,7 @@ data Expr = VAR Var
           | NUM Num
           | EXPR Expr Expr
   deriving (Eq, Show)
+
 
 -- | Task 2
 -- | Define a MiniLogo macro line (x1,y1,x2,y2) that (starting from anywhere on the canvas)
@@ -94,6 +96,7 @@ macros :: Prog-> [Macro]
 macros [] = []
 macros (h:t) = case h of Define m _ _ -> [m] ++ macros t
                          _            -> macros t         --This indentation needs to stay
+
 
 -- | Task 6
 -- | Define a Haskell function pretty :: Prog -> String that pretty-prints a MiniLogo program.
@@ -154,30 +157,11 @@ expandVarList (h:t)  = h ++ "," ++ expandVarList t
 -- |
 -- >>> optE (2+3)+x
 -- 5+x
-=======
--- Takes [Expr] in the form [VAR "x", VAR "y", EXPR (VAR "x") (VAR "w"), EXPR (VAR "y") (VAR "h")]
--- Returns String in the form "x,y,x+w,y+h"
-expandExprList :: [Expr] -> String
-expandExprList (h:[]) = case h of (NUM n) -> show n 
-                                  (VAR v) -> v 
-                                  (EXPR (VAR e1) (VAR e2)) -> e1 ++ "+" ++ e2
-expandExprList (h:t) = case h of (NUM n) -> show n ++ "," ++ expandExprList t
-                                 (VAR v) -> v ++ "," ++ expandExprList t
-                                 (EXPR (VAR e1) (VAR e2)) -> e1 ++ "+" ++ e2 ++ "," ++ expandExprList t
-
---Complete. Works
--- Takes something in the form ["x1","y1","x2","y2"]
--- Returns in the form "x1,y1,x2,y2"
-expandVarList :: [Var] -> String
-expandVarList (h:[]) = h
-expandVarList (h:t)  = h ++ "," ++ expandVarList t
 
 optE :: Expr -> Expr
 optE (EXPR e1 e2) = helper e1 ++ helper e2
 -- optE (VAR v) = v
 optE (NUM n) = n
 
--- optE :: Expr -> Expr
--- expandExprList (h:[]) = case h of (NUM n) -> show n 
---                                   (VAR v) -> v 
---                                   (EXPR (VAR e1) (VAR e2)) -> e1 ++ "+" ++ e2
+helper :: Maybe -> Expr
+helper ()
