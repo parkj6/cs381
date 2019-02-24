@@ -11,11 +11,11 @@ import KarelState
 
 -- | Valuation function for Test.
 test :: Test -> World -> Robot -> Bool
-test (Not t)    w r = not (test t w r) 
-test (Facing c) _ r = undefined
-test (Clear d)  w (p,c,b) = isClear p w
-test Beeper     _ r = undefined
-test Empty      _ r = undefined
+test (Not t)    w r        = not (test t w r) 
+test (Facing c) _ r        = c == (getFacing r)
+test (Clear d)  w r        = isClear (relativePos d r) w
+test Beeper     w r        = hasBeeper (getPos r) w
+test Empty      _ r        = isEmpty r
 
 -- | Valuation function for Stmt.
 stmt :: Stmt -> Defs -> World -> Robot -> Result
@@ -36,3 +36,15 @@ stmt (Block (a:b)) _ _ r = undefined
 -- | Run a Karel program.
 prog :: Prog -> World -> Robot -> Result
 prog (m,s) w r = stmt s m w r
+
+-- | Testing 'Test' code
+demoWorld :: World
+demoWorld (4,1) = Just 2
+demoWorld (6,1) = Just 3
+demoWorld (8,1) = Just 4
+demoWorld (x,y) | x >= 0 && x < 10 &&
+                  y >= 0 && y < 5      = Just 0
+                | otherwise            = Nothing
+				
+demoBot :: Robot
+demoBot = ((4,1),East,1)
