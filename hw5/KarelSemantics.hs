@@ -29,7 +29,11 @@ stmt PutBeeper     _ w r = let p = getPos r
                               test (Not Empty) w r && test (Clear Front) w r
                               then OK (incBeeper p w) (decBag r)
                               else Error ("No beeper to put.") 
-stmt Move          _ _ r = undefined
+stmt Move          _ w r = let f = getFacing r
+                        in if test (Clear Front) w r
+                              then OK w (updatePos (neighbor f) r)
+                                    -- new address: (neighbor (cardTurn (Front c)) (getPos r))
+                              else Error ("Blocked at: " ++ show f )
 stmt (Turn d)      _ _ r = undefined
 stmt (Block (a:b)) _ _ r = undefined
 stmt (If t s1 s2)  _ _ r = undefined
