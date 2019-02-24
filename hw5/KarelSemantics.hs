@@ -7,7 +7,7 @@ import Data.Function (fix)
 
 import KarelSyntax
 import KarelState
-
+import KarelExamples
 
 -- | Valuation function for Test.
 test :: Test -> World -> Robot -> Bool
@@ -36,15 +36,3 @@ stmt (Block (a:b)) _ _ r = undefined
 -- | Run a Karel program.
 prog :: Prog -> World -> Robot -> Result
 prog (m,s) w r = stmt s m w r
-
--- | Testing 'Test' code
-demoWorld :: World
-demoWorld (4,1) = Just 2
-demoWorld (6,1) = Just 3
-demoWorld (8,1) = Just 4
-demoWorld (x,y) | x >= 0 && x < 10 &&
-                  y >= 0 && y < 5      = Just 0
-                | otherwise            = Nothing
-				
-demoBot :: Robot
-demoBot = ((4,1),East,1)
