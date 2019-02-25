@@ -40,9 +40,19 @@ stmt (Block [a])   d w r = stmt a d w r
 stmt (Block (a:b)) d w r = case (stmt a d w r) of
                                 (OK w2 r2) -> stmt (Block b) d w2 r2
                                 _ -> stmt a d w r
-stmt (If t s1 s2)  _ _ r = undefined
-stmt (Call m)      _ _ r = undefined
-stmt (Iterate i s) _ _ r = undefined
+stmt (If t s1 s2)  d w r = if test t w r
+                           then stmt s1 d w r 
+                           else stmt s2 d w r
+stmt (Call m)      d w r = case lookup m d of
+                           Just b -> stmt b d w r
+                           _      -> Error ("Undefined Macro: " ++ m)
+stmt (Iterate i s) d w r = case i of 
+                           0 -> OK w r                          
+                           i -> stmt (Iterate (i-1) s) d (case (stmt s d w r) of
+                                                         OK w r -> w 
+                                                         )
+                                                         (case (stmt s d w r) of
+                                                            OK w r -> r)
 stmt (While t s)   _ _ r = undefined
 
 -- | Run a Karel program.
