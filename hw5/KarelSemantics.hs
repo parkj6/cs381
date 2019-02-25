@@ -35,7 +35,11 @@ stmt Move          _ w r = let f = getFacing r
                                     -- new address: (neighbor (cardTurn (Front c)) (getPos r))
                               else Error ("Blocked at: " ++ show f )
 stmt (Turn d)      _ w r = OK w (updateFacing (cardTurn d) r)
-stmt (Block (a:b)) _ _ r = undefined
+stmt (Block [])    d w r = Done r
+stmt (Block [a])   d w r = stmt a d w r
+stmt (Block (a:b)) d w r = case (stmt a d w r) of
+                                (OK w2 r2) -> stmt (Block b) d w2 r2
+                                _ -> stmt a d w r
 stmt (If t s1 s2)  _ _ r = undefined
 stmt (Call m)      _ _ r = undefined
 stmt (Iterate i s) _ _ r = undefined
