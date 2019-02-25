@@ -36,7 +36,9 @@ stmt Move          _ w r = let f = getFacing r
                               else Error ("Blocked at: " ++ show f )
 stmt (Turn d)      _ w r = OK w (updateFacing (cardTurn d) r)
 stmt (Block (a:b)) _ _ r = undefined
-stmt (If t s1 s2)  _ _ r = undefined
+stmt (If t s1 s2)  d w r = if test t w r
+                           then stmt s1 d w r 
+                           else stmt s2 d w r
 stmt (Call m)      _ _ r = undefined
 stmt (Iterate i s) _ _ r = undefined
 stmt (While t s)   _ _ r = undefined
