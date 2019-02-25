@@ -39,7 +39,9 @@ stmt (Block (a:b)) _ _ r = undefined
 stmt (If t s1 s2)  d w r = if test t w r
                            then stmt s1 d w r 
                            else stmt s2 d w r
-stmt (Call m)      _ _ r = undefined
+stmt (Call m)      d w r = case lookup m d of
+                           Just b -> stmt b d w r
+                           _      -> Error ("Undefined Macro: " ++ m)
 stmt (Iterate i s) _ _ r = undefined
 stmt (While t s)   _ _ r = undefined
 
