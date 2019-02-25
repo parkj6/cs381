@@ -33,7 +33,7 @@ stmt Move          _ w r = let f = getFacing r
                         in if test (Clear Front) w r
                               then OK w (updatePos (neighbor f) r)
                                     -- new address: (neighbor (cardTurn (Front c)) (getPos r))
-                              else Error ("Blocked at: " ++ show f )
+                              else Error ("Blocked at: " ++ show (neighbor f (getPos r)))
 stmt (Turn d)      _ w r = OK w (updateFacing (cardTurn d) r)
 stmt (Block [])    d w r = Done r
 stmt (Block [a])   d w r = stmt a d w r
