@@ -50,9 +50,13 @@ stmt (Iterate i s) d w r = case i of
                            0 -> Done r
                            1 -> stmt s d w r
                            i -> case (stmt s d w r) of
-                                (OK w2 r2) -> stmt (Iterate (i-1) s) d w2 r2
-                                _ -> stmt s d w r
-stmt (While t s)   d w r = undefined
+                                     (OK w2 r2) -> stmt (Iterate (i-1) s) d w2 r2
+                                     _ -> stmt s d w r
+stmt (While t s)   d w r = if test t w r
+                           then case (stmt s d w r) of
+                                     (OK w2 r2) -> stmt (While t s) d w2 r2
+                                     _ -> stmt s d w r
+                           else OK w r
 
 -- | Run a Karel program.
 prog :: Prog -> World -> Robot -> Result
