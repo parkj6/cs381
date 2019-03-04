@@ -21,25 +21,23 @@ test Empty      _ r = isEmpty r
 stmt :: Stmt -> Defs -> World -> Robot -> Result
 stmt Shutdown      _ _ r = Done r
 stmt PickBeeper    _ w r = let p = getPos r
-                        in if hasBeeper p w
+                           in if hasBeeper p w
                               then OK (decBeeper p w) (incBag r)
                               else Error ("No beeper to pick at: " ++ show p)
 stmt PutBeeper     _ w r = let p = getPos r
-                        in if test (Not Empty) w r && hasBeeper p w || 
+                           in if test (Not Empty) w r && hasBeeper p w || 
                               test (Not Empty) w r && test (Clear Front) w r
                               then OK (incBeeper p w) (decBag r)
                               else Error ("No beeper to put.") 
 stmt Move          _ w r = let f = getFacing r
-                        in if test (Clear Front) w r
+                           in if test (Clear Front) w r
                               then OK w (updatePos (neighbor f) r)
                                     -- new address: (neighbor (cardTurn (Front c)) (getPos r))
                               else Error ("Blocked at: " ++ show (neighbor f (getPos r)))
 stmt (Turn d)      _ w r = OK w (updateFacing (cardTurn d) r)
-stmt (Block [])    d w r = Done r
+stmt (Block [])    _ _ r = Done r
 stmt (Block [a])   d w r = stmt a d w r
-stmt (Block (a:b)) d w r = case (stmt a d w r) of
-                                (OK w2 r2) -> stmt (Block b) d w2 r2
-                                _ -> stmt a d w r
+stmt (Block (a:b)) d w r = onOK (stmt (Block b) d) (stmt a d w r)
 stmt (If t s1 s2)  d w r = if test t w r
                            then stmt s1 d w r 
                            else stmt s2 d w r
@@ -49,13 +47,9 @@ stmt (Call m)      d w r = case lookup m d of
 stmt (Iterate i s) d w r = case i of
                            0 -> Done r
                            1 -> stmt s d w r
-                           i -> case (stmt s d w r) of
-                                     (OK w2 r2) -> stmt (Iterate (i-1) s) d w2 r2
-                                     _ -> stmt s d w r
+                           i -> onOK (stmt (Iterate (i-1) s) d) (stmt s d w r)
 stmt (While t s)   d w r = if test t w r
-                           then case (stmt s d w r) of
-                                     (OK w2 r2) -> stmt (While t s) d w2 r2
-                                     _ -> stmt s d w r
+                           then onOK (stmt (While t s) d) (stmt s d w r)
                            else OK w r
 
 -- | Run a Karel program.
