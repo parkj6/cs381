@@ -38,43 +38,26 @@ import Prelude hiding (length,sum,product,map,foldr)
 
 -- | Add an integer to itself.
 double :: Int -> Int
-double x = x + x
+double x = undefined
 
 -- | Is this integer zero?
 isZero :: Int -> Bool
-isZero 0 = True
-isZero _ = False
+isZero = undefined
 -- isZero x = x == 0
 
 -- | Is this integer non-zero?
 isNonZero :: Int -> Bool
-isNonZero = not . isZero
+isNonZero = undefined
 
--- Option 3:
--- isNonZero x = not (isZero x)
-
--- Option 2:
--- isNonZero 0 = False
--- isNonZero _ = True
-
--- Option 1:
--- isNonZero x = x /= 0
 
 
 -- | Computes the average of two floating point numbers.
 avg :: Float -> Float -> Float
-avg x y = (x + y) / 2.0
+avg x y = undefined
 
 -- | Uses avg to compute half of a floating point number.
 half :: Float -> Float
-half = avg 0
-
--- Option 2:
--- half = \x -> avg 0 x
-
--- Option 1:
--- half x = avg 0 x
-
+half = undefined
 
 -- In GHCi:
 --  * infix vs. prefix application: operators are just functions!
@@ -101,21 +84,17 @@ data Result = OK Int | Error
 
 -- | Safely divide two integers.
 safeDiv :: Int -> Int -> Result
-safeDiv _ 0 = Error
-safeDiv x y = OK (x `div` y)
+safeDiv _ 0 = undefined
 
 -- | Get the integer from an OK result, or return 0 on an Error.
 fromResult :: Result -> Int
 -- fromResult (OK i) = i
 -- fromResult Error  = 0
-fromResult r = case r of
-                 Error -> 0
-                 OK i  -> i
+fromResult r = undefined
 
 -- | Add two results.
 addResults :: Result -> Result -> Result
-addResults (OK i) (OK j) = OK (i + j)
-addResults _      _      = Error
+addResults = undefined
 
 
 -- The definition of Bool in the Haskell Prelude looks like this:
@@ -144,21 +123,19 @@ data List
 
 -- | The empty list.
 empty :: List
-empty = Nil
+empty = undefined
 
 -- | The list: [2,3,4]
 exList :: List
-exList = Cons 2 (Cons 3 (Cons 4 Nil))
+exList = undefined
 
 -- | Compute the length of a list.
 listLength :: List -> Int
-listLength Nil        = 0
-listLength (Cons _ t) = 1 + listLength t
+listLength = undefined
 
 -- | Compute the sum of the integers in a list.
 listSum :: List -> Int
-listSum Nil        = 0
-listSum (Cons h t) = h + listSum t
+listSum = undefined
 
 
 -- Example evaluation:
@@ -201,37 +178,30 @@ listSum (Cons h t) = h + listSum t
 
 -- | Compute the length of a list.
 length :: [a] -> Int
-length []    = 0
-length (_:t) = 1 + length t
+length = undefined
 
 -- | Compute the sum of an integer list.
 sum :: [Int] -> Int
-sum []    = 0
-sum (h:t) = h + sum t
+sum = undefined
 
 -- | Compute the product of the elements in a list.
 product :: [Int] -> Int
-product []    = 1
-product (h:t) = h * product t
+product = undefined
 
 allOdd :: [Int] -> Bool
-allOdd []    = True
-allOdd (h:t) = odd h && allOdd t
+allOdd = undefined
 
 -- | Double all the elements in an integer list.
 doubleAll :: [Int] -> [Int]
-doubleAll []    = []
-doubleAll (h:t) = (2 * h) : doubleAll t
+doubleAll = undefined
 
 -- | Flip all of the boolean values in a boolean list.
 notAll :: [Bool] -> [Bool]
-notAll []    = []
-notAll (h:t) = not h : notAll t
+notAll = undefined
 
 -- | Apply the even function to all elements in the list.
 evenAll :: [Int] -> [Bool]
-evenAll []    = []
-evenAll (h:t) = even h : evenAll t
+evenAll = undefined
 
 
 ----------------------------
@@ -243,42 +213,40 @@ evenAll (h:t) = even h : evenAll t
 
 -- | Map a function over the elements in a list.
 map :: (a -> b) -> [a] -> [b]
-map f []    = []
-map f (h:t) = f h : map f t
+map = undefined
 
 -- | Reimplement doubleAll using map.
 doubleAll' :: [Int] -> [Int]
-doubleAll' = map (2*)
+doubleAll' = undefined
 
 -- | Reimplement notAll using map.
 notAll' :: [Bool] -> [Bool]
-notAll' = map not
+notAll' = undefined
 
 -- | Reimplement evenAll using map.
 evenAll' :: [Int] -> [Bool]
-evenAll' = map even
+evenAll' = undefined
 
 -- | Fold an accumulator function over the elements in a list.
 foldr :: (a -> b -> b) -> b -> [a] -> b
-foldr f b []    = b
-foldr f b (h:t) = f h (foldr f b t)
+foldr = undefined
 
 -- | Reimplement sum using foldr.
 sum' :: [Int] -> Int
-sum' = foldr (+) 0
+sum' = undefined
 
 -- | Reimplement product using foldr.
 product' :: [Int] -> Int
-product' = foldr (*) 1
+product' = undefined
 
 -- | Reimplement length using foldr.
 length' :: [a] -> Int
-length' = foldr (\_ l -> 1 + l) 0
+length' = undefined
 
 -- | Reimplement allOdd using foldr.
 allOdd' :: [Int] -> Bool
-allOdd' = foldr (\h r -> odd h && r) True
+allOdd' = undefined
 
 -- | Use foldr to count the True values in a list of Bools.
 countTrues :: [Bool] -> Int
-countTrues = foldr (\h r -> if h then 1 + r else r) 0
+countTrues = undefined

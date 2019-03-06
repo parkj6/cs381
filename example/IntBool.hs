@@ -107,3 +107,59 @@ or  l r = If l true r
 --    not true || 3 == -3 && (true || false)
 ex4 :: Exp
 ex4 = or (not true) (and (Equ (Lit 3) (neg (Lit 3))) (or true false))
+
+
+--
+-- * Statically typed variant
+--
+
+-- 1. Define the syntax of types
+
+data Type = TInt | TBool | TError
+  deriving (Eq,Show)
+
+-- 2. Define the typing relation.
+typeOf :: Exp -> Type
+typeOf (Lit _)    = TInt
+typeOf (Add l r)  = case (typeOf l, typeOf r) of
+                      (TInt, TInt) -> TInt
+                      _ -> TError
+typeOf (Mul l r)  = case (typeOf l, typeOf r) of
+                      (TInt, TInt) -> TInt
+                      _ -> TError
+typeOf (Equ l r)  = case (typeOf l, typeOf r) of
+                      (TInt, TInt) -> TBool
+                      (TBool, TBool) -> TBool
+                      _ -> TError
+typeOf (If c t e) = case (typeOf c, typeOf t, typeOf e) of
+                      (TBool, tt, te) -> if tt == te then tt else TError
+                      _ -> TError
+
+
+-- 3. Define the semantics of type-correct programs.
+sem' :: Exp -> Either Int Bool
+sem' (Lit i)    = Left i
+sem' (Add l r)  = Left (evalInt l + evalInt r)
+sem' (Mul l r)  = Left (evalInt l * evalInt r)
+sem' (Equ l r)  = Right (sem' l == sem' r)
+sem' (If c t e) = if evalBool c then sem' t else sem' e
+
+
+-- | Helper function to evaluate an Exp to an Int.
+evalInt :: Exp -> Int
+evalInt e = case sem' e of
+              Left i -> i
+              _ -> error "internal error: expected Int, got something else!"
+
+-- | Helper function to evaluate an Exp to an Bool.
+evalBool :: Exp -> Bool
+evalBool e = case sem' e of
+               Right b -> b
+               _ -> error ("internal error: expected Bool, got something else!"
+
+-- 4. Define our interpreter.
+eval :: Exp -> Value
+eval e = case typeOf e of
+           TInt   -> I (evalInt e)
+           TBool  -> B (evalBool e)
+           TError -> TypeError
