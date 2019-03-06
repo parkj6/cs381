@@ -4,13 +4,30 @@ module M2practice where
 type Hour = Int
 type Minutes = Int
 
-data Time = Midnight
-          | Noon
-          | AM Hour
-          | PM Hour
+data Time = Midnight            -- constant time 00:00
+          | Noon                -- constant time 12:00
+          | AM Hour             -- time: 00:00 - 11:59
+          | PM Hour             -- time: 12:00 - 23:59
           | Before Minutes Time
           | After Minutes Time
   deriving (Eq,Show)
+
+-- | time 8:13am
+-- >>> time (After 13 (AM 8))
+-- 493
+
+time :: Time -> Int
+time Midnight     = 0             -- 00:00 = 0
+time Noon         = 12 * 60       -- 12:00 = 720
+time (AM 12)      = 0             -- Midnight
+time (AM h)       = h * 60        -- Hour x 60min
+time (PM h)       = h * 60 + 720  -- Hour x 60min + 12hr
+time (Before m t) = time t - m
+time (After  m t) = time t + m
+
+
+
+
 
 -- 2. Consider the following abstract syntax for a language describing movements on a 2-dimensional plane.
 
