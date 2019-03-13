@@ -52,14 +52,13 @@ parent(selma,ling).
 %%
 
 % 1. Define a predicate `child/2` that inverts the parent relationship.
-child(Y,X) :- parent(X,Y).
+
 
 % 2. Define two predicates `isMother/1` and `isFather/1`.
-isMother(X) :- parent(X,_), female(X).
-isFather(X) :- parent(X,_), male(X).
+
 
 % 3. Define a predicate `grandparent/2`.
-grandparent(X,Z) :- parent(X,Y), parent(Y,Z).
+
 
 % 4. Define a predicate `sibling/2`. Siblings share at least one parent.
 
