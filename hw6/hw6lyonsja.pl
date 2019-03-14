@@ -68,8 +68,11 @@ parent(selma,ling).
  brother(X,Y):- sibling(X,Y), male(X).
  sister(X,Y):- sibling(X,Y), female(X).
 % 6. Define a predicate `siblingInLaw/2`. A sibling-in-law is either married to
-%    a sibling or the sibling of a spouse.
- % siblingInLaw(X,Y):- sibling(X, A), married(A, _) ; married(X, C), sibling(C, _).
+%   a sibling or the sibling of a spouse.
+ siblingInLaw(X,Y):- married(X,A), sibling(A,Y) ; sibling(X, B), married(B, Y).
+%  siblingInLaw(X,Y):- sibling(Y, B), married(B,_).
+%  siblingInLaw(X,Y):- married(X, A), sibling(A,_).
+%  siblingInLaw(X,Y):- married(Y,B), sibling(B,_).
 
 % 7. Define two predicates `aunt/2` and `uncle/2`. Your definitions of these
 %    predicates should include aunts and uncles by marriage.
