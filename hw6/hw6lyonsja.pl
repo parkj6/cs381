@@ -17,6 +17,8 @@ male(clancy).
 male(herb).
 male(homer).
 male(bart).
+male(test).
+
 
 married_(abe,mona).
 married_(clancy,jackie).
@@ -45,6 +47,10 @@ parent(marge,maggie).
 
 parent(selma,ling).
 
+%%%%%%%%%%%%%%%%%%%
+parent(herb, test).
+
+
 
 
 %%
@@ -67,13 +73,16 @@ parent(selma,ling).
 % 5. Define two predicates `brother/2` and `sister/2`.
  brother(X,Y):- sibling(X,Y), male(X).
  sister(X,Y):- sibling(X,Y), female(X).
+
 % 6. Define a predicate `siblingInLaw/2`. A sibling-in-law is either married to
 %   a sibling or the sibling of a spouse.
  siblingInLaw(X,Y):- married(X,A), sibling(A,Y) ; sibling(X, B), married(B, Y).
 
 % 7. Define two predicates `aunt/2` and `uncle/2`. Your definitions of these
 %    predicates should include aunts and uncles by marriage.
+ aunt(X,Y):- sister(X,A), parent(A,Y) ; parent(A,Y), siblingInLaw(A,female(X)).
 
+uncle(X,Y):- brother(X,A), parent(A,Y); child(Y,A), siblingInLaw(A,male(X)).
 
 % 8. Define the predicate `cousin/2`.
 
