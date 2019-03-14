@@ -70,9 +70,6 @@ parent(selma,ling).
 % 6. Define a predicate `siblingInLaw/2`. A sibling-in-law is either married to
 %   a sibling or the sibling of a spouse.
  siblingInLaw(X,Y):- married(X,A), sibling(A,Y) ; sibling(X, B), married(B, Y).
-%  siblingInLaw(X,Y):- sibling(Y, B), married(B,_).
-%  siblingInLaw(X,Y):- married(X, A), sibling(A,_).
-%  siblingInLaw(X,Y):- married(Y,B), sibling(B,_).
 
 % 7. Define two predicates `aunt/2` and `uncle/2`. Your definitions of these
 %    predicates should include aunts and uncles by marriage.
