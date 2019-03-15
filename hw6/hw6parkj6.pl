@@ -89,3 +89,24 @@ sister(X,Y) :- sibling(X,Y), female(X).
 %%
 % Part 2. Language implementation (see course web page)
 %%
+
+% num	::=	(any number literal)	
+num(n).
+str(st).
+bool(b).
+% str	::=	(any string literal)	
+% bool	::=	t   |   f	boolean literals
+% prog	::=	cmd∗	sequence of commands
+% cmd	::=	num   |   str   |   bool	push a literal onto the stack
+% |	add   |   lte	number addition/comparison
+% |	if(prog,prog)	conditional branching
+
+
+% A literal number (e.g. 3), string (e.g. "Hi there!"), or boolean (i.e. t or f) is a command that simply pushes the corresponding value onto the stack.
+
+% The add command pops two numbers off the stack and pushes their sum.
+
+% The lte command pops two numbers off the stack and pushes t if the first number is the less than or equal to the second, otherwise it pushes f.
+
+% An if(P1,P2) command pops a boolean value off the stack and executes either P1 if the value is t or P2 if the value is f.
+
