@@ -80,15 +80,14 @@ parent(herb, test).
 
 % 7. Define two predicates `aunt/2` and `uncle/2`. Your definitions of these
 %    predicates should include aunts and uncles by marriage.
- aunt(X,Y):- sister(X,A), parent(A,Y) ; parent(A,Y), siblingInLaw(A,female(X)).
-
-uncle(X,Y):- brother(X,A), parent(A,Y); child(Y,A), siblingInLaw(A,male(X)).
+ aunt(X,Y):- sister(X,A), parent(A,Y) ; parent(A,Y), siblingInLaw(X,A), female(X).
+ uncle(X,Y):- brother(X,A), parent(A,Y); parent(A,Y), siblingInLaw(X,A), male(X).
 
 % 8. Define the predicate `cousin/2`.
-
+ cousin(X,Y):- parent(A,X), sibling(A,B), parent(B,Y); parent(A,X), sibling(A,B), married(B, C), parent(C, Y).
 
 % 9. Define the predicate `ancestor/2`.
-
+ ancestor(X,Y):- parent(X,Y) ; parent(X,A), ancestor(A,Y).
 
 % Extra credit: Define the predicate `related/2`.
 
