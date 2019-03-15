@@ -89,3 +89,10 @@ sister(X,Y) :- sibling(X,Y), female(X).
 %%
 % Part 2. Language implementation (see course web page)
 %%
+
+cmd(add,[X,Y|Z],[S|Z]) :- S is X+Y.
+cmd(lte,[X,Y|Z],[t|Z]) :- X < Y.
+cmd(lte,[X,Y|Z],[f|Z]) :- X >= Y.
+cmd(L,S,[L|S]).
+
+prog([X|Y],S1,S3)      :- cmd(X,S1,S2), prog(Y,S2,S3).
