@@ -108,4 +108,5 @@ cmd(lte,[X,Y|Z],[t|Z]) :- X < Y.
 cmd(lte,[X,Y|Z],[f|Z]) :- X >= Y.
 cmd(L,S,[L|S]).
 
-prog([X|Y],S1,S3)      :- cmd(X,S1,S2), prog(Y,S2,S3).
+prog([],S1,S1).
+prog([X|Y],S1,S3)           :- cmd(X,S1,S2), prog(Y,S2,S3).
