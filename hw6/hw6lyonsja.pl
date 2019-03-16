@@ -17,10 +17,13 @@ male(clancy).
 male(herb).
 male(homer).
 male(bart).
+male(herbkid).                  % made up
+male(selhusband).               % made up
 
 married_(abe,mona).
 married_(clancy,jackie).
 married_(homer,marge).
+married_(selma,selhusband).     % I married them for lulz.
 
 married(X,Y) :- married_(X,Y).
 married(X,Y) :- married_(Y,X).
@@ -45,6 +48,11 @@ parent(marge,maggie).
 
 parent(selma,ling).
 
+%%%%%%%%%%%%%%%%%%%
+parent(herb, herbkid).          % made up
+parent(selhusband, somekid).    % made up
+
+
 
 
 %%
@@ -52,39 +60,44 @@ parent(selma,ling).
 %%
 
 % 1. Define a predicate `child/2` that inverts the parent relationship.
-child(Y,X) :- parent(X,Y).
+ child(X,Y):- parent(Y,X).
 
 % 2. Define two predicates `isMother/1` and `isFather/1`.
-isMother(X) :- parent(X,_), female(X).
-isFather(X) :- parent(X,_), male(X).
+ isMother(X):- female(X), parent(X,_).
+ isFather(X):- male(X), parent(X,_).
 
 % 3. Define a predicate `grandparent/2`.
-grandparent(X,Z) :- parent(X,Y), parent(Y,Z).
+ grandparent(X,Y):- parent(X,N), parent(N,Y).
 
 % 4. Define a predicate `sibling/2`. Siblings share at least one parent.
-sibling(X,Y) :- child(X,Z), child(Y,Z), X \= Y.
+ sibling(A,B):- parent(P,A), parent(P,B), A\=B.
 
 % 5. Define two predicates `brother/2` and `sister/2`.
-brother(X,Y) :- sibling(X,Y), male(X).
-sister(X,Y) :- sibling(X,Y), female(X).
+ brother(X,Y):- sibling(X,Y), male(X).
+ sister(X,Y):- sibling(X,Y), female(X).
 
 % 6. Define a predicate `siblingInLaw/2`. A sibling-in-law is either married to
-%    a sibling or the sibling of a spouse.
-
+%   a sibling or the sibling of a spouse.
+ siblingInLaw(X,Y):- married(X,A), sibling(A,Y) ; sibling(X, B), married(B, Y).
 
 % 7. Define two predicates `aunt/2` and `uncle/2`. Your definitions of these
 %    predicates should include aunts and uncles by marriage.
-
+ aunt(X,Y):- sister(X,A), parent(A,Y) ; parent(A,Y), siblingInLaw(X,A), female(X).
+ uncle(X,Y):- brother(X,A), parent(A,Y); parent(A,Y), siblingInLaw(X,A), male(X).
 
 % 8. Define the predicate `cousin/2`.
-
+ cousin(X,Y):- parent(A,X), sibling(A,B), parent(B,Y); parent(A,X), sibling(A,B), married(B, C), parent(C, Y).
 
 % 9. Define the predicate `ancestor/2`.
-
+ ancestor(X,Y):- parent(X,Y) ; parent(X,A), ancestor(A,Y).
 
 % Extra credit: Define the predicate `related/2`.
+related_(X,Y) :- ancestor(X,Y); 
+                 sibling(X,A), ancestor(A,Y);
+                 married(X,A), ancestor(A,Y);
+                 cousin(X,Y).
 
-
+related(X,Y) :- related_(X,Y); related_(Y,X). 
 
 %%
 % Part 2. Language implementation (see course web page)
