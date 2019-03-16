@@ -94,7 +94,6 @@ parent(selhusband, somekid).    % made up
 % Extra credit: Define the predicate `related/2`.
 related_(X,Y) :- ancestor(X,Y); 
                  sibling(X,A), ancestor(A,Y);
-                 married(X,A), ancestor(A,Y);
                  cousin(X,Y).
 
 related(X,Y) :- related_(X,Y); related_(Y,X). 
