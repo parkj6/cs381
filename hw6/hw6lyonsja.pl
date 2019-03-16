@@ -106,7 +106,9 @@ related(X,Y) :- related_(X,Y); related_(Y,X).
 cmd(add,[X,Y|Z],[S|Z]) :- S is X+Y.
 cmd(lte,[X,Y|Z],[t|Z]) :- X < Y.
 cmd(lte,[X,Y|Z],[f|Z]) :- X >= Y.
-cmd(L,S,[L|S]).
+cmd(L,S,[L|S])         :- L \= add, L \= lte, L \= if(_,_).
 
 prog([],S1,S1).
-prog([X|Y],S1,S3)           :- cmd(X,S1,S2), prog(Y,S2,S3).
+prog([if(P1,_)|Y],[S1H|S1T],S3) :- S1H = t, prog(P1,S1T,S2), prog(Y,S2,S3).
+prog([if(_,P2)|Y],[S1H|S1T],S3) :- S1H = f, prog(P2,S1T,S2), prog(Y,S2,S3).
+prog([X|Y],S1,S3) :- cmd(X,S1,S2), prog(Y,S2,S3).
