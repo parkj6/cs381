@@ -92,12 +92,12 @@ parent(selhusband, somekid).    % made up
  ancestor(X,Y):- parent(X,Y) ; parent(X,A), ancestor(A,Y).
 
 % Extra credit: Define the predicate `related/2`.
-related_(X,Y) :- ancestor(X,Y); 
+related_(X,Y) :- ancestor(X,Y);
                  sibling(X,A), ancestor(A,Y);
                  married(X,A), ancestor(A,Y);
                  cousin(X,Y).
 
-related(X,Y) :- related_(X,Y); related_(Y,X). 
+related(X,Y) :- related_(X,Y); related_(Y,X).
 
 %%
 % Part 2. Language implementation (see course web page)
@@ -106,6 +106,10 @@ related(X,Y) :- related_(X,Y); related_(Y,X).
 cmd(add,[X,Y|Z],[S|Z]) :- S is X+Y.
 cmd(lte,[X,Y|Z],[t|Z]) :- X < Y.
 cmd(lte,[X,Y|Z],[f|Z]) :- X >= Y.
-cmd(L,S,[L|S]).
+cmd(L,S,[L|S])         :- L \= add, L \= lte, L \= if(_,_).
 
-prog([X|Y],S1,S3)      :- cmd(X,S1,S2), prog(Y,S2,S3).
+
+prog([],S1,S1).
+prog([if(P1,_)|Y],[S1H|S1T],S3) :- S1H = t, prog(P1,S1T,S2), prog(Y,S2,S3).
+prog([if(_,P2)|Y],[S1H|S1T],S3) :- S1H = f, prog(P2,S1T,S2), prog(Y,S2,S3).
+prog([X|Y],S1,S3) :- cmd(X,S1,S2), prog(Y,S2,S3).
