@@ -35,9 +35,9 @@ portal(3,blue,4).      portal(4,red,2).      portal(4,green,2).
 % 4. Define a recursive predicate path/3 that relates whether two positions are connected by portals of a particular color. 
 % For example, the query path(1,blue,4) should return true.
 
-path(S,C,D) :- portal(S,C,D); portal(S,C,X), path(X,C,D).
-% path(X,C,Y) :- X = Y.
-% path(X,C,Y) :- portal(X,C,Z), path(Z,C,Y).
+% path(S,C,D) :- portal(S,C,D); portal(S,C,X), path(X,C,D).
+path(X,C,Y) :- X = Y.
+path(X,C,Y) :- portal(X,C,Z), path(Z,C,Y).
 
 % 5. Using path/3, write a query that finds all of the colors for which a path exists from position 3 to position 1. Then list all solutions to this query.
 
