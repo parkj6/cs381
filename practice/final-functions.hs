@@ -66,8 +66,28 @@ type Value = ...        -- semantic domain, V
 sem :: Term -> Value    -- Valuation function, [[a]] : T -> V
 
 
+--Dynamic vs Static Scope
+Dynamic: called during runtime
+sem :: Exp -> Val
 
+Static: called during compile time (src)
+typeOf :: Exp -> Type
+
+-------------------------
+--       Prolog        --
+-------------------------
 
 -- Negation as failure (Prolog)
 not(P) :- P, !, fail.
 not(P).
+
+-- List Patterns
+?- story([X,Y,Z|V]).
+X = 3,
+Y = little,
+Z = pigs,
+V = [].
+
+[3,4] == ‘[|]’(3,’[|]’(4,[]))
+-- [|] = cons
+-- [] = nil
