@@ -5,7 +5,7 @@ bar(X,Y) :- foo(X), !, foo(Y).
 bar(3,3).
 
 % Green cut.
-max(X,Y,Y) :- X < Y, !.
+max(X,Y,Y) :- X < Y,!.
 max(X,Y,X) :- X >= Y.
 
 % Red cut.
@@ -16,6 +16,7 @@ member(X,[X|_]).
 member(X,[_|L]) :- member(X,L).
 
 % Negation as failure.
+% not(P) :- P, !, fail.
 not(P) :- P, !, fail.
 not(_).
 
