@@ -70,7 +70,7 @@ sister(X,Y) :- sibling(X,Y), female(X).
 
 % 6. Define a predicate `siblingInLaw/2`. A sibling-in-law is either married to
 %    a sibling or the sibling of a spouse.
-siblingInLaw(X,Y) :- married(X,Z), 
+siblingInLaw(X,Z) :- married(X,Y), sibling(Y,Z); sibling(X,Y), married(Y,Z).
 
 % 7. Define two predicates `aunt/2` and `uncle/2`. Your definitions of these
 %    predicates should include aunts and uncles by marriage.
@@ -106,6 +106,19 @@ siblingInLaw(X,Y) :- married(X,Z),
 
 % 1. Define the predicate cmd/3, which describes the effect of a command on the stack. That is, the predicate cmd(C,S1,S2) means that executing command C with stack S1 produces stack S2.
 
+
+cmd(t,S,[t|S]).
+cmd(f,S,[f|S]).
+cmd(X,S,[X|S]) :- number(X).
+cmd(X,S,[X|S]) :- string(X).
+
+cmd(add,[X,Y|S], [Z|S]) :- Z is X+Y.
+cmd(lte,[X,Y|S], [t|S]) :- X =< Y.
+cmd(lte,[X,Y|S], [f|S]) :- X > Y.
+
+cmd(if(P,_),[t|S],T)    :- prog(P,S,T).
+cmd(if(_,P),[f|S],T)    :- prog(P,S,T).
+
 % ?- cmd("hello",[4],S).
 % S = ["hello", 4].
 
@@ -123,6 +136,9 @@ siblingInLaw(X,Y) :- married(X,Z),
 % Note that I have not provided a test case for if yet since it depends on the prog/3 predicate below.
 
 % 2. Define the predicate prog/3, which describes the effect of a program on the stack. That is, the predicate prog(P,S1,S2) means that executing program P with stack S1 produces stack S2.
+
+prog([],S,S).
+prog([A|B],S1,S2) :- cmd(A,S1,S), prog(B,S,S2).
 
 % ?- prog([3,4,add],[],S).
 % S = [7] .
